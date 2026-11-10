@@ -1,0 +1,14 @@
+{
+  "name": "covernest-api-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Day 9 starter: Playwright + TypeScript API and UI tests against the CoverNest sandbox (FS Learning, Wexel Gyles Molina, training-plan-1)",
+  "scripts": {
+    "test": "playwright test",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^22.0.0"
+  }
+}

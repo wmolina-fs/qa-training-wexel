@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CoverNest — Get a quote</title>
+<style>
+  body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif; background: #f6f7f9; color: #1f242e; margin: 0; }
+  header { background: #1f3a5f; color: #fff; padding: 14px 24px; font-weight: 600; }
+  main { max-width: 520px; margin: 24px auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px 24px; }
+  h1 { font-size: 20px; margin: 0 0 14px; }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 12px 0 4px; }
+  input, select { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #c9ced6; border-radius: 6px; font-size: 14px; }
+  input[type=checkbox] { width: auto; }
+  .check label { display: inline; font-weight: 600; margin-left: 6px; }
+  button { margin-top: 16px; background: #1f3a5f; color: #fff; border: 0; border-radius: 6px; padding: 9px 16px; font-size: 14px; cursor: pointer; }
+  .alert { background: #fdecea; color: #8a1c13; border-radius: 6px; padding: 8px 10px; margin-top: 12px; font-size: 13px; }
+  .field-error { color: #8a1c13; font-size: 12.5px; margin: 4px 0 0; min-height: 0; }
+  [aria-invalid=true] { border-color: #c0392b; }
+  .result { background: #eef8f1; border-radius: 8px; padding: 12px 14px; margin-top: 16px; }
+  .result dt { font-size: 12px; color: #5b6472; } .result dd { margin: 0 0 8px; font-size: 18px; font-weight: 700; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header>CoverNest Renters Insurance</header>
+<main>
+  <section id="signin">
+    <h1>Sign in</h1>
+    <form id="signin-form">
+      <label for="username">Username</label><input id="username" name="username" autocomplete="username">
+      <label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password">
+      <button type="submit">Sign in</button>
+      <div id="signin-alert" class="alert" role="alert" hidden></div>
+    </form>
+  </section>
+
+  <section id="quote" hidden>
+    <h1>Get a quote</h1>
+    <p data-testid="signed-in"></p>
+    <form id="quote-form" novalidate>
+      <label for="zip">ZIP code</label><input id="zip" name="zip" inputmode="numeric" aria-describedby="err-zip">
+      <p class="field-error" id="err-zip"></p>
+      <label for="coverageLimit">Coverage limit</label><input id="coverageLimit" name="coverageLimit" type="number" aria-describedby="err-coverageLimit">
+      <p class="field-error" id="err-coverageLimit"></p>
+      <label for="deductible">Deductible</label>
+      <select id="deductible" name="deductible" aria-describedby="err-deductible"><option value="500">$500</option><option value="1000" selected>$1,000</option><option value="2500">$2,500</option></select>
+      <p class="field-error" id="err-deductible"></p>
+      <label for="roommates">Roommates</label><input id="roommates" name="roommates" type="number" value="0" aria-describedby="err-roommates">
+      <p class="field-error" id="err-roommates"></p>
+      <div class="check"><input id="petsOnPremises" name="petsOnPremises" type="checkbox"><label for="petsOnPremises">Pets on premises</label></div>
+      <button type="submit">Get quote</button>
+      <div id="form-alert" class="alert" role="alert" hidden></div>
+    </form>
+    <section class="result" data-testid="quote-result" aria-label="Quote result" hidden>
+      <dl>
+        <dt>Quote</dt><dd data-testid="quote-id"></dd>
+        <dt>Annual premium</dt><dd data-testid="annual-premium"></dd>
+        <dt>Monthly premium</dt><dd data-testid="monthly-premium"></dd>
+      </dl>
+    </section>
+  </section>
+</main>
+<script>
+  let token = null;
+  const $ = (id) => document.getElementById(id);
+  const money = (n) => '$' + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  $('signin-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    $('signin-alert').hidden = true;
+    const res = await fetch('/login', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: $('username').value, password: $('password').value }) });
+    const body = await res.json();
+    if (!res.ok) { $('signin-alert').textContent = body.error; $('signin-alert').hidden = false; return; }
+    token = body.token;
+    document.querySelector('[data-testid="signed-in"]').textContent = 'Signed in as ' + body.displayName;
+    $('signin').hidden = true; $('quote').hidden = false;
+  });
+
+  $('quote-form').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    for (const el of document.querySelectorAll('.field-error')) el.textContent = '';
+    for (const el of document.querySelectorAll('[aria-invalid]')) el.removeAttribute('aria-invalid');
+    $('form-alert').hidden = true;
+    const result = document.querySelector('[data-testid="quote-result"]');
+    result.hidden = true;
+    const data = { zip: $('zip').value, coverageLimit: Number($('coverageLimit').value), deductible: Number($('deductible').value),
+      roommates: Number($('roommates').value), petsOnPremises: $('petsOnPremises').checked };
+    const res = await fetch('/quotes', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify(data) });
+    const body = await res.json();
+    if (!res.ok) {
+      $('form-alert').textContent = 'Something went wrong. Please try again.';
+      $('form-alert').hidden = false;
+      return;
+    }
+    document.querySelector('[data-testid="quote-id"]').textContent = body.id;
+    document.querySelector('[data-testid="annual-premium"]').textContent = money(body.annualPremium);
+    document.querySelector('[data-testid="monthly-premium"]').textContent = money(body.monthlyPremium);
+    result.hidden = false;
+  });
+</script>
+</body>
+</html>

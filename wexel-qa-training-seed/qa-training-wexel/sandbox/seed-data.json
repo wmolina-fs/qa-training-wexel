@@ -1,0 +1,35 @@
+{
+  "users": [
+    { "username": "ana.agent", "password": "Train1ng!", "role": "agent", "agencyId": "A1", "displayName": "Ana Reyes (Agent, Northgate Agency)" },
+    { "username": "ben.agent", "password": "Train1ng!", "role": "agent", "agencyId": "A2", "displayName": "Ben Ortiz (Agent, Lakeside Agency)" },
+    { "username": "cara.customer", "password": "Train1ng!", "role": "customer", "customerId": "C100", "agencyId": "A1", "displayName": "Cara Lim (Policyholder)" },
+    { "username": "dev.customer", "password": "Train1ng!", "role": "customer", "customerId": "C101", "agencyId": "A2", "displayName": "Dev Santos (Policyholder)" },
+    { "username": "dan.csr", "password": "Train1ng!", "role": "csr", "displayName": "Dan Cruz (Customer Service Rep, read-only)" }
+  ],
+  "agencies": [
+    { "id": "A1", "name": "Northgate Agency" },
+    { "id": "A2", "name": "Lakeside Agency" }
+  ],
+  "quotes": [
+    { "id": "Q-1001", "agencyId": "A1", "customerId": "C100", "zip": "94107", "coverageLimit": 40000, "deductible": 1000, "roommates": 1, "petsOnPremises": false, "annualPremium": 474.00, "monthlyPremium": 39.50, "rateTableVersion": "v7", "createdAt": "DAYS_AGO_2", "status": "Open" },
+    { "id": "Q-1002", "agencyId": "A2", "customerId": "C101", "zip": "60614", "coverageLimit": 25000, "deductible": 500, "roommates": 0, "petsOnPremises": true, "annualPremium": 286.00, "monthlyPremium": 23.83, "rateTableVersion": "v7", "createdAt": "DAYS_AGO_5", "status": "Open" },
+    { "id": "Q-1003", "agencyId": "A1", "customerId": "C100", "zip": "30301", "coverageLimit": 20000, "deductible": 2500, "roommates": 0, "petsOnPremises": false, "annualPremium": 144.00, "monthlyPremium": 12.00, "rateTableVersion": "v7", "createdAt": "DAYS_AGO_31", "status": "Open" }
+  ],
+  "policies": [
+    { "policyNumber": "CN-500100", "quoteId": "Q-0901", "agencyId": "A1", "customerId": "C100", "status": "Active", "effectiveDate": "2026-03-01", "termEnd": "2027-02-28", "annualPremium": 412.00, "monthlyPremium": 34.33 },
+    { "policyNumber": "CN-500101", "quoteId": "Q-0902", "agencyId": "A2", "customerId": "C101", "status": "Active", "effectiveDate": "2026-06-15", "termEnd": "2027-06-14", "annualPremium": 298.80, "monthlyPremium": 24.90 },
+    { "policyNumber": "CN-500102", "quoteId": "Q-0903", "agencyId": "A1", "customerId": "C100", "status": "Lapsed", "effectiveDate": "2025-01-10", "termEnd": "2026-01-09", "annualPremium": 255.00, "monthlyPremium": 21.25 }
+  ],
+  "claims": [
+    { "id": "CL-7001", "policyNumber": "CN-500100", "customerName": "Cara Lim", "cause": "Water damage from upstairs unit", "dateOfLoss": "2026-09-14", "amount": 1840.50, "status": "Open" },
+    { "id": "CL-7002", "policyNumber": "CN-500100", "customerName": "Cara Lim", "cause": "Stolen bicycle from building storage", "dateOfLoss": "2026-07-02", "amount": 620.00, "status": "Paid" },
+    { "id": "CL-7003", "policyNumber": "CN-500101", "customerName": "Dev Santos", "cause": "Kitchen fire, smoke damage to furniture", "dateOfLoss": "2026-10-03", "amount": 3275.25, "status": "Open" },
+    { "id": "CL-7004", "policyNumber": "CN-500101", "customerName": "Dev Santos", "cause": "Laptop damaged by power surge", "dateOfLoss": "2026-08-21", "amount": 1415.00, "status": "Denied" },
+    { "id": "CL-7005", "policyNumber": "CN-500100", "customerName": "Cara Lim", "cause": "Burst pipe in bathroom", "dateOfLoss": "2026-10-28", "amount": 2960.75, "status": "Open" },
+    { "id": "CL-7006", "policyNumber": "CN-500101", "customerName": "Dev Santos", "cause": "Window broken during storm", "dateOfLoss": "2026-09-30", "amount": 480.00, "status": "Paid" },
+    { "id": "CL-7007", "policyNumber": "CN-500100", "customerName": "Cara Lim", "cause": "Jewelry stolen in break-in", "dateOfLoss": "2026-05-19", "amount": 5100.00, "status": "Paid" },
+    { "id": "CL-7008", "policyNumber": "CN-500101", "customerName": "Dev Santos", "cause": "Refrigerator failure, spoiled food", "dateOfLoss": "2026-10-11", "amount": 235.40, "status": "Open" },
+    { "id": "CL-7009", "policyNumber": "CN-500100", "customerName": "Cara Lim", "cause": "Guest injured on balcony, liability claim", "dateOfLoss": "2026-08-08", "amount": 7800.00, "status": "Open" },
+    { "id": "CL-7010", "policyNumber": "CN-500101", "customerName": "Dev Santos", "cause": "Mold damage to stored clothing", "dateOfLoss": "2026-06-27", "amount": 910.60, "status": "Denied" }
+  ]
+}
